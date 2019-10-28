@@ -6,43 +6,43 @@
     $body_type_selector = <<<EOD
         <select name="body_type_selection" class="selectpicker form-control btn-dark btn-sm">  
             <option value="">Body Type</option>   
-            <option> Sedan </option>
-            <option> Hatchback </option>
-            <option> Coupe </option>
-            <option> Minivan </option>
-            <option> Station Wagon </option>
-            <option> Pickup </option>  
+            <option value="(body_type='Sedan') AND"> Sedan </option>
+            <option value="(body_type='Hatchback') AND"> Hatchback </option>
+            <option value="(body_type='Coupe') AND"> Coupe </option>
+            <option value="(body_type='Minivan') AND"> Minivan </option>
+            <option value="(body_type='Station Wagon')  AND"> Station Wagon </option>
+            <option value="(body_type='Pickup') AND"> Pickup </option>  
         </select>
     EOD;
     $transmission_selector = <<<EOD
         <select name="transmission_selection" class="selectpicker form-control btn-dark btn-sm">  
             <option value="">Transmission</option>   
-            <option> Automatic </option>
-            <option> Semi-Automatic </option>
-            <option> Manual </option>
-            <option> Tiptronic </option>
+            <option value="(transmission_type='Automatic') AND"> Automatic </option>
+            <option value="(transmission_type='Semi-'Automatic') AND"> Semi-Automatic </option>
+            <option value="(transmission_type='Manual') AND"> Manual </option>
+            <option value="(transmission_type='Tiptronic') AND"> Tiptronic </option>
         </select>
     EOD;
 
     $fuel_selector = <<<EOD
         <select name="fuel_selection" class="selectpicker form-control btn-dark btn-sm">  
             <option value="">Fuel</option>   
-            <option> Gasoline </option>
-            <option> Diesel </option>
-            <option> Liquified Petroleum </option>
-            <option> Compressed Natural Gas </option>
-            <option> Hybrid </option>
-            <option> Electricity </option>
+            <option value="(fuel='Gasoline') AND"> Gasoline </option>
+            <option value="(fuel='Diesel') AND"> Diesel </option>
+            <option value="(fuel='Liquified Petroleum') AND"> Liquified Petroleum </option>
+            <option value="(fuel='Compressed Natural Gas') AND"> Compressed Natural Gas </option>
+            <option value="(fuel='Hybrid') AND"> Hybrid </option>
+            <option value="(fuel='Electricity') AND"> Electricity </option>
         </select>
     EOD;
 
     $mileage_selector = <<<EOD
         <select name="mileage_selection" class="selectpicker form-control btn-dark btn-sm">  
             <option value="">Current Mileage(km)</option>   
-            <option value="BETWEEN 0 AND 10000"> 0-10.000 </option>
-            <option value="BETWEEN 10000 AND 50000"> 10.000-50.000 </option>
-            <option value="BETWEEN 50000 AND 100000"> 50.000-100.000 </option>
-            <option value=">=100000"> 100.000+ </option>
+            <option value="(current_mileage BETWEEN 0 AND 10000) AND"> 0-10.000 </option>
+            <option value="(current_mileage BETWEEN 10000 AND 50000) AND"> 10.000-50.000 </option>
+            <option value="(current_mileage BETWEEN 50000 AND 100000) AND"> 50.000-100.000 </option>
+            <option value="(current_mileage > 100000)"> 100.000+ </option>
         </select>
     EOD;
     $vehicle_age_selector = <<<EOD
@@ -53,52 +53,53 @@
             <option value="5,7"> 5-7 </option>
             <option value="7,10"> 7-10 </option>
             <option value="10,15"> 10-15 </option>
-            <option value=">=15"> 15+ </option>
+            <option value=">15"> 15+ </option>
         </select>
     EOD;
     $traction_selector = <<<EOD
         <select name="traction_selection" class="selectpicker form-control btn-dark btn-sm">  
             <option value="">Traction</option>   
-            <option> AWD </option>
-            <option> FWD </option>
-            <option> RWD </option>
-            <option> 4WD </option>
+            <option value="(traction='AWD') AND"> AWD </option>
+            <option value="(traction='FWD') AND"> FWD </option>
+            <option value="(traction='RWD') AND"> RWD </option>
+            <option value="(traction='4WD') AND"> 4WD </option>
         </select>
     EOD;
     $horsepower_selector = <<<EOD
         <select name="horsepower_selection" class="selectpicker form-control btn-dark btn-sm">  
             <option value="">Horsepower</option>   
-            <option value="BETWEEN 0 AND 50"> 0-50 HP </option>
-            <option value="BETWEEN 50 AND 75"> 50-75 HP </option>
-            <option value="BETWEEN 75 AND 100"> 75-100 HP </option>
-            <option value="BETWEEN 100 AND 200"> 100-200 HP </option>
-            <option value="BETWEEN 200 AND 300"> 200-300 HP </option>
-            <option value="BETWEEN 300 AND 400"> 300-400 HP </option>
-            <option value="BETWEEN 400 AND 500"> 400-500 HP </option>
-            <option value=">=500"> 500+ HP </option>
+            <option value="(horsepower BETWEEN 0 AND 50)"> 0-50 HP </option>
+            <option value="(horsepower BETWEEN 50 AND 75)"> 50-75 HP </option>
+            <option value="(horsepower BETWEEN 75 AND 100)"> 75-100 HP </option>
+            <option value="(horsepower BETWEEN 100 AND 200)"> 100-200 HP </option>
+            <option value="(horsepower BETWEEN 200 AND 300)"> 200-300 HP </option>
+            <option value="(horsepower BETWEEN 300 AND 400)"> 300-400 HP </option>
+            <option value="(horsepower BETWEEN 400 AND 500)"> 400-500 HP </option>
+            <option value="(horsepower >500)"> 500+ HP </option>
         </select>
     EOD;
 
     if(isset($_POST['apply_filter'])){
-        $required = array('brand_selection', 'body_type_selection','transmission_selection', 'fuel_selection', 'mileage_selection', 'vehicle_age_selection', 'traction_selection', 'horsepower_selection');        
+        $filters = array('brand_selection', 'body_type_selection','transmission_selection', 'fuel_selection', 'mileage_selection', 'vehicle_age_selection', 'traction_selection', 'horsepower_selection');        
 
-        $error = false;
-        foreach($required as $field) {
+        $filter_field_counter=8;
+        foreach($filters as $field) {
             if (empty($_POST[$field])) {
-                $error = true;
+                $filter_field_counter--;
             }
         }
 
-        if ($error) {
-            $message = "All fields are required.";
-            echo "<script type='text/javascript'>alert('$message');</script>";
+        if ($filter_field_counter==0) {            
             $main_car_table_qry = "SELECT brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower FROM vehicles JOIN brands ON vehicles.brand_id = brands.id";                
-        }else{            
-            if($_POST['vehicle_age_selection'] == ">=15"){
-                $mnf_year_qry = "<= " . (date('Y') - $_POST['vehicle_age_selection']);
+        }else{   
+            if($_POST['vehicle_age_selection'] == ""){
+                $mnf_year_qry ="";
+            }
+            else if($_POST['vehicle_age_selection'] == ">15"){
+                $mnf_year_qry = "(manufacturing_year < " . (date('Y') - 15) . ") AND";
             }else{
                 $mnf_year_option_array = explode(",", $_POST['vehicle_age_selection']);
-                $mnf_year_qry = "BETWEEN " . (date('Y') - $mnf_year_option_array[1]) . " AND " . (date('Y') - $mnf_year_option_array[0]);
+                $mnf_year_qry = "(manufacturing_year BETWEEN " . (date('Y') - $mnf_year_option_array[1]) . " AND " . (date('Y') - $mnf_year_option_array[0]) . ") AND";
             }            
             $brand=$_POST['brand_selection'];
             $brand_id = "";            
@@ -111,14 +112,18 @@
 
             $main_car_table_qry = "SELECT brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower ".
             "FROM vehicles JOIN brands ON vehicles.brand_id = brands.id ".
-            "WHERE (name='$brand') AND (body_type='$body_type') AND (transmission_type='$transmission') AND (fuel='$fuel') AND (current_mileage $mileage) AND (manufacturing_year $mnf_year_qry) AND (traction='$traction') AND (horsepower $horsepower)";                                              
+            "WHERE $brand $body_type $transmission $fuel $mileage $mnf_year_qry $traction $horsepower"; 
+            
+            $main_car_table_qry = rtrim($main_car_table_qry);
+
+            if(substr($main_car_table_qry, -3)=="AND"){
+                $main_car_table_qry = substr($main_car_table_qry, 0, -3);
+            }
         }
     }
     else{
         $main_car_table_qry = "SELECT brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower FROM vehicles JOIN brands ON vehicles.brand_id = brands.id";        
     }
-
-    
 
     if(isset($_POST['addVehicle'])){
         $required = array('brand_selection', 'vehicle_model', 'body_type_selection','transmission_selection', 'fuel_selection', 'mileage', 'manufacturing_year', 'traction_selection', 'horsepower');
@@ -268,14 +273,14 @@
                                     <form method="post" enctype="multipart/form-data">  
                                         <div class="btn-group">                                                        
                                             <select name="brand_selection" class="selectpicker form-control btn-dark btn-sm">      
-                                                <option value="brand">Brand</option>                                  
+                                                <option value="">Brand</option>                                  
                                                     <?php 
                                                         $sql = "SELECT brands.name FROM brands";    
                                                         if($result = mysqli_query($conn, $sql)){
                                                             if(mysqli_num_rows($result)>0){
                                                                 while($row = mysqli_fetch_array($result))
                                                                 {
-                                                                    echo '<option value="'. $row['name'] . '" >' . $row['name'] . '</a>';                                                  
+                                                                    echo '<option value="(name=\''. $row['name'] . '\') AND" >' . $row['name'] . '</a>';                                                                                                                    
                                                                 }
                                                             }
                                                         } 
@@ -353,12 +358,13 @@
                             <div class="d-sm-flex align-items-auto mb-3">                      
                                     <button class="btn btn-success ml-auto btn-sm" data-toggle="modal" data-target="#vehiclemodal">Add New Vehicle</button>
                                 </div> 
-                            <br/>                                      
+                            <br/>             
+                            <?php echo($main_car_table_qry);?>                               
                         </div>        
-                        </div>                
+                        </div>                                        
                     </div>              
-                </div>
+                </div>                
             </div> 
-        </div>       
+        </div>               
     </body>
 </html>

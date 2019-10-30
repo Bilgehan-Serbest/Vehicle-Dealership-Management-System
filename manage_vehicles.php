@@ -2,40 +2,12 @@
     include('config/db_connect.php');
     
     $main_car_table_qry="";
+
+    $body_types = array("Sedan", "Hatchback", "Coupe", "Minivan", "Station Wagon", "Pickup");
+    $transmission_types = array("Automatic", "Semi-Automatic", "Manual", "Tiptronic");
+    $fuel_types = array("Gasoline", "Diesel", "Liquified Petroleum", "Compressed Natural Gas", "Hybrid", "Electricity");
+    $traction_types = array("AWD", "FWD", "RWD", "4WD");
     
-    $body_type_selector = <<<EOD
-        <select name="body_type_selection" class="selectpicker form-control btn-dark btn-sm">  
-            <option value="">Body Type</option>   
-            <option value="(body_type='Sedan') AND"> Sedan </option>
-            <option value="(body_type='Hatchback') AND"> Hatchback </option>
-            <option value="(body_type='Coupe') AND"> Coupe </option>
-            <option value="(body_type='Minivan') AND"> Minivan </option>
-            <option value="(body_type='Station Wagon')  AND"> Station Wagon </option>
-            <option value="(body_type='Pickup') AND"> Pickup </option>  
-        </select>
-    EOD;
-    $transmission_selector = <<<EOD
-        <select name="transmission_selection" class="selectpicker form-control btn-dark btn-sm">  
-            <option value="">Transmission</option>   
-            <option value="(transmission_type='Automatic') AND"> Automatic </option>
-            <option value="(transmission_type='Semi-'Automatic') AND"> Semi-Automatic </option>
-            <option value="(transmission_type='Manual') AND"> Manual </option>
-            <option value="(transmission_type='Tiptronic') AND"> Tiptronic </option>
-        </select>
-    EOD;
-
-    $fuel_selector = <<<EOD
-        <select name="fuel_selection" class="selectpicker form-control btn-dark btn-sm">  
-            <option value="">Fuel</option>   
-            <option value="(fuel='Gasoline') AND"> Gasoline </option>
-            <option value="(fuel='Diesel') AND"> Diesel </option>
-            <option value="(fuel='Liquified Petroleum') AND"> Liquified Petroleum </option>
-            <option value="(fuel='Compressed Natural Gas') AND"> Compressed Natural Gas </option>
-            <option value="(fuel='Hybrid') AND"> Hybrid </option>
-            <option value="(fuel='Electricity') AND"> Electricity </option>
-        </select>
-    EOD;
-
     $mileage_selector = <<<EOD
         <select name="mileage_selection" class="selectpicker form-control btn-dark btn-sm">  
             <option value="">Current Mileage(km)</option>   
@@ -54,15 +26,6 @@
             <option value="7,10"> 7-10 </option>
             <option value="10,15"> 10-15 </option>
             <option value=">15"> 15+ </option>
-        </select>
-    EOD;
-    $traction_selector = <<<EOD
-        <select name="traction_selection" class="selectpicker form-control btn-dark btn-sm">  
-            <option value="">Traction</option>   
-            <option value="(traction='AWD') AND"> AWD </option>
-            <option value="(traction='FWD') AND"> FWD </option>
-            <option value="(traction='RWD') AND"> RWD </option>
-            <option value="(traction='4WD') AND"> 4WD </option>
         </select>
     EOD;
     $horsepower_selector = <<<EOD
@@ -90,7 +53,7 @@
         }
 
         if ($filter_field_counter==0) {            
-            $main_car_table_qry = "SELECT brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower FROM vehicles JOIN brands ON vehicles.brand_id = brands.id";                
+            $main_car_table_qry = "SELECT vehicles.id, brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower FROM vehicles JOIN brands ON vehicles.brand_id = brands.id";                
         }else{   
             if($_POST['vehicle_age_selection'] == ""){
                 $mnf_year_qry ="";
@@ -110,7 +73,7 @@
             $traction=$_POST['traction_selection'];
             $horsepower=$_POST['horsepower_selection'];                        
 
-            $main_car_table_qry = "SELECT brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower ".
+            $main_car_table_qry = "SELECT vehicles.id, brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower ".
             "FROM vehicles JOIN brands ON vehicles.brand_id = brands.id ".
             "WHERE $brand $body_type $transmission $fuel $mileage $mnf_year_qry $traction $horsepower"; 
             
@@ -122,7 +85,7 @@
         }
     }
     else{
-        $main_car_table_qry = "SELECT brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower FROM vehicles JOIN brands ON vehicles.brand_id = brands.id";        
+        $main_car_table_qry = "SELECT vehicles.id, brands.name, brands.brand_logo_path, vehicles.model, vehicles.body_type, vehicles.transmission_type, vehicles.fuel, vehicles.current_mileage, vehicles.manufacturing_year, vehicles.traction, vehicles.horsepower FROM vehicles JOIN brands ON vehicles.brand_id = brands.id";        
     }
 
     if(isset($_POST['addVehicle'])){
@@ -140,7 +103,6 @@
             echo "<script type='text/javascript'>alert('$message');</script>";
         
         } else {            
-            // mysqli_close($conn);
             $brand=$_POST['brand_selection'];
             $brand_id = "";
             $model=$_POST['vehicle_model'];
@@ -159,17 +121,16 @@
                     $brand_id = $row['id'];                                      
                 }
               }
-            // mysqli_close($conn);
 
-            $sql = "INSERT INTO vehicles(body_type,model,transmission_type,fuel,current_mileage,manufacturing_year,horsepower,traction,brand_id) 
-            VALUES('$body_type','$model','$transmission','$fuel','$mileage','$manufacturing_year','$horsepower','$traction','$brand_id')";       
+            $sql = "INSERT INTO vehicles(body_type,model,transmission_type,fuel,current_mileage,manufacturing_year,horsepower,traction,brand_id) ". 
+            "VALUES('$body_type','$model','$transmission','$fuel','$mileage','$manufacturing_year','$horsepower','$traction','$brand_id')";       
             if (mysqli_query($conn,$sql)) {
-                $message="The vehicle has been added to the database.";
+                $message="The vehicle has been added.";
             }
             else{
                 $message="Error, the vehicle register failed.";
             }     
-            echo "<script type='text/javascript'>alert('$message');</script>";
+            echo "<script type='text/javascript'>alert('$sql');</script>";
             
             mysqli_close($conn);
         }
@@ -201,6 +162,9 @@
                 background-color:#38CE3C;
                 border-color:#38CE3C;
             }
+            .far{
+                cursor: pointer; 
+            }
         </style>
     </head>
     <body>              
@@ -214,11 +178,11 @@
                             <div class="d-sm-flex align-items-center mb-4">
                                 <h1 class="card-title ">Vehicles Available</h1>
                             </div> 
-                            <div id="vehiclemodal" class="modal" tabindex="-1" role="dialog">
+                            <div id="vehicle_add_modal" class="modal" tabindex="-1" role="dialog">                           
                                 <div class="modal-dialog" role="document">
                                     <div class="modal-content">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title">Add New Vehicle</h5>
+                                        <div class="modal-header">                                        
+                                            <h5 class="modal-title">Add New Vehicle</h5>;
                                             <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                                             <span aria-hidden="true">&times;</span>
                                             </button>
@@ -228,7 +192,7 @@
                                                 <form method="post" enctype="multipart/form-data">  
                                                     <select name="brand_selection" class="selectpicker form-control btn-dark btn-sm">      
                                                         <option value="">Brand</option>                                  
-                                                            <?php 
+                                                            <?php                                                                 
                                                                 $sql = "SELECT brands.name FROM brands";    
                                                                 if($result = mysqli_query($conn, $sql)){
                                                                     if(mysqli_num_rows($result)>0){
@@ -243,21 +207,49 @@
                                                     <br/>                                                 
                                                     <input class="form-control" type="text" name="vehicle_model" id="vehicle_model" placeholder="Model" />                                                                                                  
                                                     <br/>
-                                                    <?php echo($body_type_selector) ?>
+                                                    <select name="body_type_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                        <option value="">Body Type</option>
+                                                        <?php 
+                                                            foreach($body_types as $body_type){
+                                                                echo(" <option value='".$body_type."'>" .$body_type. "</option>");                                                                    
+                                                            }
+                                                        ?>
+                                                    </select>                                                    
                                                     <br/>
-                                                    <?php echo($transmission_selector) ?>
+                                                    <select name="transmission_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                        <option value="">Transmission</option>   
+                                                        <?php 
+                                                            foreach($transmission_types as $transmission_type){                                                                
+                                                                echo(" <option value='".$transmission_type."'>" .$transmission_type. "</option>");                                                                
+                                                            }
+                                                        ?>
+                                                    </select>
                                                     <br/>
-                                                    <?php echo($fuel_selector) ?>
+                                                    <select name="fuel_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                        <option value="">Fuel</option>   
+                                                        <?php 
+                                                            foreach($fuel_types as $fuel_type){                                                                
+                                                                echo(" <option value='".$fuel_type."'>" .$fuel_type. "</option>");                                                                
+                                                            }
+                                                        ?>
+                                                    </select>
                                                     <br/>
                                                     <input class="form-control" type="text" name="mileage" id="mileage" placeholder="Mileage" />                                                                                                  
                                                     <br/>
                                                     <input class="form-control" type="text" name="manufacturing_year" id="manufacturing_year" placeholder="Manufacturing Year" />                                                                                                  
                                                     <br/>
-                                                    <?php echo($traction_selector) ?>
+                                                    <select name="traction_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                        <option value="">Traction</option>  
+                                                        <?php 
+                                                            foreach($traction_types as $traction_type){                                                                    
+                                                                echo(" <option value='".$traction_type."'>" .$traction_type. "</option>");
+                                                            }
+                                                        ?> 
+                                                    </select>
                                                     <br/>
                                                     <input class="form-control" type="text" name="horsepower" id="horsepower" placeholder="Horsepower" />                                                                                                  
 
-                                                    <div class="modal-footer ml-2">                                                                                  
+                                                    <div class="modal-footer ml-2">    
                                                         <input type="submit" class="btn btn-primary" id="addVehicle" value="Add" name="addVehicle"></button>
                                                         <button type="button" class="btn btn-secondary" id="close" data-dismiss="modal">Close</button>
                                                     </div>
@@ -266,7 +258,7 @@
                                         </div>                       
                                     </div>
                                 </div>
-                            </div> 
+                            </div>                              
                             <div>   
                                 <h4>Filtering Options</h5>                                                
                                 <br/>
@@ -288,13 +280,34 @@
                                             </select>  
                                         </div>
                                         <div class="btn-group">
-                                            <?php echo($body_type_selector) ?>
+                                            <select name="body_type_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                <option value="">Body Type</option>
+                                                <?php 
+                                                    foreach($body_types as $body_type){
+                                                        echo(" <option value=\"(body_type='".$body_type."') AND\">" .$body_type. "</option>");                                                                    
+                                                    }
+                                                ?>
+                                            </select> 
                                         </div> 
                                         <div class="btn-group">
-                                            <?php echo($transmission_selector) ?>
+                                            <select name="transmission_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                <option value="">Transmission</option>   
+                                                <?php 
+                                                    foreach($transmission_types as $transmission_type){                                                                
+                                                        echo(" <option value=\"(transmission_type='".$transmission_type."') AND\">" .$transmission_type. "</option>");                                                                
+                                                    }
+                                                ?>
+                                            </select>
                                         </div> 
                                         <div class="btn-group">
-                                            <?php echo($fuel_selector) ?>
+                                            <select name="fuel_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                <option value="">Fuel</option>   
+                                                <?php 
+                                                    foreach($fuel_types as $fuel_type){                                                                
+                                                        echo(" <option value=\"(fuel='".$fuel_type."') AND\">" .$fuel_type. "</option>");                                                                
+                                                    }
+                                                ?>
+                                            </select>
                                         </div> 
                                         <div class="btn-group">
                                             <?php echo($mileage_selector) ?>
@@ -303,7 +316,14 @@
                                             <?php echo($vehicle_age_selector) ?>
                                         </div>
                                         <div class="btn-group">
-                                            <?php echo($traction_selector) ?>
+                                            <select name="traction_selection" class="selectpicker form-control btn-dark btn-sm">  
+                                                <option value="">Traction</option>  
+                                                <?php 
+                                                    foreach($traction_types as $traction_type){                                                                    
+                                                        echo(" <option value=\"(traction='".$traction_type."') AND\">" .$traction_type. "</option>");
+                                                    }
+                                                ?> 
+                                            </select>
                                         </div> 
                                         <div class="btn-group">
                                             <?php echo($horsepower_selector) ?>
@@ -327,6 +347,7 @@
                                     <th class="font-weight-bold">Manufacturing Year</th>                                                      
                                     <th class="font-weight-bold">Traction</th>
                                     <th class="font-weight-bold">Horsepower</th>                                                                                  
+                                    <th class="font-weight-italic">Edit/Delete</th>   
                                     </tr>
                                 </thead>
                                 <tbody>                                    
@@ -342,10 +363,11 @@
                                                 echo "<td>" .  $row['body_type'] . "</td>";                                  
                                                 echo "<td>" .  $row['transmission_type'] . "</td>";                                  
                                                 echo "<td>" .  $row['fuel'] . "</td>";                                  
-                                                echo "<td>" .  $row['current_mileage'] . "</td>";                                  
+                                                echo "<td>" .  number_format($row['current_mileage']) . "</td>";                                  
                                                 echo "<td>" .  $row['manufacturing_year'] . "</td>";                                  
                                                 echo "<td>" .  $row['traction'] . "</td>";                                  
-                                                echo "<td>" .  $row['horsepower'] . "</td>";                                  
+                                                echo "<td>" .  $row['horsepower'] . "</td>";                                                                                  
+                                                echo "<td> &nbsp; &nbsp; <a class='far fa-edit' id='vehicle_edit_option' href='edit_vehicle.php?id=".$row['id']."'></a> &nbsp; <a class='far fa-trash-alt' id='vehicle_delete_option' href='delete_vehicle_prompt.php?id=".$row['id']."' ></a> </td>";
                                                 echo "</tr>";
                                                 }
                                             }
@@ -356,10 +378,9 @@
                             </div>  
                             <br/>
                             <div class="d-sm-flex align-items-auto mb-3">                      
-                                    <button class="btn btn-success ml-auto btn-sm" data-toggle="modal" data-target="#vehiclemodal">Add New Vehicle</button>
+                                    <button class="btn btn-success ml-auto btn-sm" data-toggle="modal" data-target="#vehicle_add_modal">Add New Vehicle</button>
                                 </div> 
-                            <br/>             
-                            <?php echo($main_car_table_qry);?>                               
+                            <br/>                                                                    
                         </div>        
                         </div>                                        
                     </div>              

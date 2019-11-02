@@ -379,7 +379,7 @@
                             <br/>
                             <div class="d-sm-flex align-items-auto mb-3">                      
                                     <button class="btn btn-success ml-auto btn-sm" data-toggle="modal" data-target="#vehicle_add_modal">Add New Vehicle</button>
-                                </div> 
+                            </div> 
                             <br/>                                                                    
                         </div>        
                         </div>                                        

@@ -89,12 +89,12 @@
     }
 
     if(isset($_POST['addVehicle'])){
-        $required = array('brand_selection', 'vehicle_model', 'body_type_selection','transmission_selection', 'fuel_selection', 'mileage', 'manufacturing_year', 'traction_selection', 'horsepower');
+        $required = array('brand_selection', 'vehicle_model', 'body_type_selection','transmission_selection', 'fuel_selection', 'manufacturing_year', 'traction_selection', 'horsepower');
         
         $error = false;
         foreach($required as $field) {
             if (empty($_POST[$field])) {
-                $error = true;
+                $error = true;                
             }
         }
 

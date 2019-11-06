@@ -24,7 +24,7 @@
           <li class="nav-item nav-profile">
             <a href="#" class="nav-link">
               <div class="profile-image">
-                <img class="img-xs rounded-circle" src="images/faces/facemahmit.jpg" alt="profile image">
+                <img class="img-xs rounded-circle" src=<?php echo($_SESSION['profile_picture_path']);?> alt="profile image">
                 <div class="dot-indicator bg-success"></div>
               </div>
               <div class="text-wrapper">

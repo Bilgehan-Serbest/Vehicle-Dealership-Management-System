@@ -8,13 +8,9 @@
     $imageFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));    
 
     $check = getimagesize($_FILES["fileToUpload"]["tmp_name"]);
-    if($check !== false) {
-      // $message = "File is an image - " . $check["mime"] . ".";
-      // echo "<script type='text/javascript'>alert('$message');</script>";
+    if($check !== false) {     
       $uploadOk = 1;
-    } else {
-      // $message = "File is not an image.";
-      // echo "<script type='text/javascript'>alert('$message');</script>";
+    } else {   
       $uploadOk = 0;
     }    
 

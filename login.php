@@ -1,4 +1,8 @@
 <?php 
+	if(session_id()){
+		session_destroy();
+	}
+	
 	session_start();
 	include('config/db_connect.php');		
 	if($_SERVER["REQUEST_METHOD"] == "POST") {		
@@ -83,10 +87,7 @@
 					</div>
 
 					<div class="contact100-form-checkbox">
-						<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
-						<label class="label-checkbox100" for="ckb1">
-							Remember me
-						</label>
+						
 					</div>
 
 					<div class="container-login100-form-btn">
@@ -96,9 +97,7 @@
 					</div>
 
 					<div class="text-center p-t-90">
-						<a class="txt1" href="#">
-							Forgot Password?
-						</a>
+						
 					</div>
 				</form>
 			</div>
